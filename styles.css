@@ -1,3 +1,10 @@
+html,*,*::before,*::after{ box-sizing: border-box; }
+
+html,body{
+    /* prevent horizontal scrolling at any screen size */
+    overflow-x: hidden;
+}
+
 body{
     /* Static linear gradient background (replaces animated layered background) */
     background: linear-gradient(135deg, #022b1f 0%, #0b6b4a 50%, #5ead76 100%);
@@ -9,9 +16,10 @@ body{
     background-repeat: no-repeat;
 }
 #container{
-    width:1000px;
+    max-width:1000px;
+    width: 100%;
     margin: 0 auto;
-    padding:14px 60px;
+    padding:14px 48px;
     border-left:5px double white;
     border-right:5px double white;
     background-color:#5ead76;
@@ -38,7 +46,7 @@ h1{
     text-align: center;
     width: 60%;
     margin: 8px auto 20px;
-    font-family: georgia;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7); 
     font-size:3em;
 
@@ -57,6 +65,7 @@ h3{
     background-color:#118000;
     font-weight:bold;
     margin: 20px 10px;
+    text-align: center;
 }
 p{
     line-height: 2em;
@@ -68,7 +77,9 @@ p{
     transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms ease, padding 220ms ease;
 }
 img{
+    max-width:100%;
     width:300px;
+    height: auto;
     float:left;
     margin-right:1em;
     border: 2px solid white;
@@ -98,6 +109,9 @@ a:active{
     margin-left:10px;
     margin-right: 0;
 }
+#pic3{
+    width:350px;
+}
 #p2{
     background-color: #349191;
 }
@@ -110,7 +124,7 @@ a:active{
 
 }
 .greentext{
-    color:#0c5a00;
+    color:#094200;
 }
 #sidebar{
     background-color:#349191;
@@ -119,7 +133,7 @@ a:active{
     border:2px solid white;
     float:right;
     margin:20px;
-    margin-top:70px;
+    margin-top:80px;
     border-radius:10px;
     /* keep sidebar in the normal document flow (not sticky) so it doesn't change position while scrolling */
     position: static;
@@ -129,7 +143,7 @@ a:active{
 /* Expand the sidebar to match the pop effect when pointer is on it (desktop) */
 #sidebar:hover,
 #sidebar:focus-within{
-    width: 260px;
+    width: 215px; /* reduced expansion for a subtler effect */
     box-shadow: 0 22px 46px rgba(2,6,23,0.38);
     transform: translateX(0);
 }
@@ -161,7 +175,7 @@ li{
         background-color:#5ab074;
     }
     p,#p2{
-        padding:20px;
+        padding:14px;
     }
 }
 @media(max-width:768px){
@@ -196,7 +210,7 @@ li{
     /* Expand when the user hovers or focuses inside the sidebar (keyboard accessible) */
     #sidebar:hover,
     #sidebar:focus-within{
-        width: 220px; /* full width when active */
+        width: 180px; /* reduced mobile expansion when active */
         right: 6px; /* nudge to keep overlay inside container */
     }
     /* Keep the sidebar expanded while the surrounding container or the first paragraph is active.
@@ -226,7 +240,7 @@ li{
         width:90%;
     }
     img,#pic1{
-        width:250px;
+        width:240px;
     }
 }
 .text-shadow{
@@ -387,12 +401,7 @@ p:nth-of-type(5) { animation-delay: 480ms; }
 /* Expand sidebar and amplify styles when the first paragraph (#p1) is hovered or focused.
    Uses the :has() relational selector; works in modern browsers (Chrome, Edge, Safari).
    Fallback: sidebar still expands on its own hover/focus-within (defined earlier). */
-#container:has(#p1:hover) #sidebar,
-#container:has(#p1:focus-within) #sidebar{
-    height: 260px;
-    box-shadow: 0 22px 46px rgba(2,6,23,0.38);
-    transform: translateX(0);
-}
+/* Sidebar will no longer expand when paragraph 1 is hovered; it only expands on direct sidebar hover/focus. */
 
 /* Pop-up / highlight other things inside #p1 when hovered or focused */
 #p1:hover,
@@ -413,9 +422,9 @@ p:focus-within .highlight,
     transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
 }
 
-/* style links inside an active paragraph, but exclude links that are inside .greentext (Calc III) */
-#p1:hover a,
-#p1:focus-within a{
+/* style links inside an active paragraph, but exclude the Calc III link and links inside .greentext */
+#p1:hover a:not([href*="calc-3-and-linear-algebra"]),
+#p1:focus-within a:not([href*="calc-3-and-linear-algebra"]){
     color: #061418;
     text-shadow: 0 2px 10px rgba(0,0,0,0.15);
     background: linear-gradient(90deg, rgba(45,212,191,0.14), rgba(255,209,102,0.06));
@@ -423,15 +432,7 @@ p:focus-within .highlight,
     border-radius: 6px;
 }
 
-/* Explicitly prevent the Calc III link from getting the hover padding/background when #p1 is active */
-#p1:hover a[href*="calc-3-and-linear-algebra"],
-#p1:focus-within a[href*="calc-3-and-linear-algebra"]{
-    padding: 0 !important;
-    background: none !important;
-    border-radius: 0 !important;
-    color: red !important; /* keep Calc III color */
-    text-shadow: none !important;
-}
+/* No special overrides for the Calc III link—it's excluded above so it inherits site link colors */
 
 /* Prevent links inside .greentext from changing color or receiving highlight styles (Calc III) */
 p:hover .greentext a,
@@ -510,23 +511,4 @@ img:hover::after{
     body::after { opacity: 0.55; }
     img:hover{ transform: translateY(-4px) scale(1.01); }
     img::after{ transition-duration: 600ms; }
-}
-
-/* --- End merged extras.css --- */
-
-/* Preserve Calc III link color specifically (match part of the href) */
-a[href*="calc-3-and-linear-algebra"]{
-    color: red !important;
-    background: none !important;
-    text-shadow: none !important;
-}
-
-/* Keep hover and active states for the Calc III link consistent with site-wide link behavior */
-a[href*="calc-3-and-linear-algebra"]:hover{
-    color: rgb(255, 154, 154) !important; /* matches a:hover */
-    text-decoration: underline !important;
-}
-
-a[href*="calc-3-and-linear-algebra"]:active{
-    color: white !important; /* matches a:active */
 }
